@@ -4,7 +4,7 @@ using Soenneker.Tests.FixturedUnit;
 using System.Threading.Tasks;
 using Soenneker.Domainr.Util.Requests;
 using Xunit;
-using FluentAssertions;
+using AwesomeAssertions;
 using Soenneker.Domainr.Util.Responses;
 
 namespace Soenneker.Domainr.Util.Tests;
