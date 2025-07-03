@@ -12,7 +12,7 @@ using Soenneker.Extensions.Object;
 namespace Soenneker.Domainr.Util;
 
 /// <inheritdoc cref="IDomainrUtil"/>
-public class DomainrUtil : IDomainrUtil
+public sealed class DomainrUtil : IDomainrUtil
 {
     private readonly IDomainrClientUtil _clientUtil;
 
