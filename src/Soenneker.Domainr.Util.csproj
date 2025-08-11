@@ -44,6 +44,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.8" />
         <PackageReference Include="Soenneker.Domainr.Client" Version="3.0.169" />
-        <PackageReference Include="Soenneker.Extensions.HttpClient" Version="3.0.3374" />
+        <PackageReference Include="Soenneker.Extensions.HttpClient" Version="3.0.3376" />
     </ItemGroup>
 </Project>
