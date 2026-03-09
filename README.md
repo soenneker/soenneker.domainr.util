@@ -1,6 +1,7 @@
-﻿[![](https://img.shields.io/nuget/v/soenneker.domainr.util.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.domainr.util/)
+[![](https://img.shields.io/nuget/v/soenneker.domainr.util.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.domainr.util/)
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.domainr.util/publish-package.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.domainr.util/actions/workflows/publish-package.yml)
 [![](https://img.shields.io/nuget/dt/soenneker.domainr.util.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.domainr.util/)
+[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.domainr.util/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.domainr.util/actions/workflows/codeql.yml)
 
 # ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Domainr.Util
 ### A .NET typesafe implementation of Domainr's API
@@ -41,7 +42,7 @@ if (result?.Results != null)
 }
 ```
 
-#### 🔹 Search Response Structure  
+#### ?? Search Response Structure  
 
 | Property     | Type    | Description |
 |-------------|--------|-------------|
@@ -54,7 +55,7 @@ if (result?.Results != null)
 
 ### 3. Checking Domain Status  
 
-The `Status` method fetches real-time information about a domain’s availability.  
+The `Status` method fetches real-time information about a domain�s availability.  
 
 ```csharp
 var statusRequest = new DomainrStatusRequest { Domain = "example.com" };
@@ -69,15 +70,15 @@ if (statusResponse?.Status != null)
 }
 ```
 
-#### 🔹 Status Response Structure  
+#### ?? Status Response Structure  
 
 | Property  | Type    | Description |
 |-----------|--------|-------------|
 | `Status`  | `List<DomainrStatusResult>?` | A list of domain status results. |
 
-Each `DomainrStatusResult` contains information about the queried domain’s availability and status.
+Each `DomainrStatusResult` contains information about the queried domain�s availability and status.
 
-#### 🔹 Status Result Structure  
+#### ?? Status Result Structure  
 
 | Property  | Type    | Description |
 |-----------|--------|-------------|
