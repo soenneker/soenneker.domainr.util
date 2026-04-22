@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Soenneker.Domainr.Util.Requests;
 using AwesomeAssertions;
 using Soenneker.Domainr.Util.Responses;
-using Soenneker.Facts.Manual;
 
 namespace Soenneker.Domainr.Util.Tests;
 
@@ -24,7 +23,7 @@ public class DomainrUtilTests : HostedUnitTest
     {
     }
 
-    [ManualFact]
+    [Skip("Manual")]
     //[LocalOnly]
     public async ValueTask Search_should_search()
     {
