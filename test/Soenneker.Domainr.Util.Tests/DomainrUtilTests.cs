@@ -1,32 +1,31 @@
-﻿using Soenneker.Domainr.Util.Abstract;
-using Soenneker.Facts.Local;
-using Soenneker.Tests.FixturedUnit;
+using Soenneker.Domainr.Util.Abstract;
+using Soenneker.Tests.Attributes.Local;
+using Soenneker.Tests.HostedUnit;
 using System.Threading.Tasks;
 using Soenneker.Domainr.Util.Requests;
-using Xunit;
 using AwesomeAssertions;
 using Soenneker.Domainr.Util.Responses;
 using Soenneker.Facts.Manual;
 
 namespace Soenneker.Domainr.Util.Tests;
 
-[Collection("Collection")]
-public class DomainrUtilTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public class DomainrUtilTests : HostedUnitTest
 {
     private readonly IDomainrUtil _util;
 
-    public DomainrUtilTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public DomainrUtilTests(Host host) : base(host)
     {
         _util = Resolve<IDomainrUtil>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
     }
 
     [ManualFact]
-    //[LocalFact]
+    //[LocalOnly]
     public async ValueTask Search_should_search()
     {
         var request = new DomainrStatusRequest { Domain = "blah.com" };
