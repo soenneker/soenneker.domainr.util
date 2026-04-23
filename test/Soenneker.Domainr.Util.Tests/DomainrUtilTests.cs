@@ -29,8 +29,9 @@ public class DomainrUtilTests : HostedUnitTest
     {
         var request = new DomainrStatusRequest { Domain = "blah.com" };
 
-        DomainrStatusResponse? result = await _util.Status(request, CancellationToken);
+        DomainrStatusResponse? result = await _util.Status(request, System.Threading.CancellationToken.None);
         result.Should()
               .NotBeNull();
     }
 }
+
