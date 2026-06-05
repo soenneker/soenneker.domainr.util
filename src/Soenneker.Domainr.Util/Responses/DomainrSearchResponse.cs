@@ -10,6 +10,9 @@ using System.Text.Json.Serialization;
 /// </summary>
 public record DomainrSearchResponse
 {
+    /// <summary>
+    /// Gets or sets results.
+    /// </summary>
     [JsonPropertyName("results")]
     public List<DomainrSearchResult>? Results { get; set; }
 }

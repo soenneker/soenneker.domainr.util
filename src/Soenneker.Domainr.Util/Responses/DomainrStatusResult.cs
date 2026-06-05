@@ -2,6 +2,9 @@
 
 namespace Soenneker.Domainr.Util.Responses;
 
+/// <summary>
+/// Represents the domainr status result record.
+/// </summary>
 public record DomainrStatusResult
 {
     /// <summary>

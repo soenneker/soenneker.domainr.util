@@ -2,6 +2,9 @@
 
 namespace Soenneker.Domainr.Util.Responses;
 
+/// <summary>
+/// Represents the domainr search result record.
+/// </summary>
 public record DomainrSearchResult
 {
     /// <summary>
