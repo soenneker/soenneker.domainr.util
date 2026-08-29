@@ -13,6 +13,8 @@ public static class DomainrUtilRegistrar
     /// <summary>
     /// Adds <see cref="IDomainrUtil"/> as a singleton service. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddDomainrUtilAsSingleton(this IServiceCollection services)
     {
         services.AddDomainrClientUtilAsSingleton().TryAddSingleton<IDomainrUtil, DomainrUtil>();
@@ -23,6 +25,8 @@ public static class DomainrUtilRegistrar
     /// <summary>
     /// Adds <see cref="IDomainrUtil"/> as a scoped service. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddDomainrUtilAsScoped(this IServiceCollection services)
     {
         services.AddDomainrClientUtilAsScoped().TryAddScoped<IDomainrUtil, DomainrUtil>();
