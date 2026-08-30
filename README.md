@@ -4,85 +4,91 @@
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.domainr.util/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.domainr.util/actions/workflows/codeql.yml)
 
 # ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Domainr.Util
-### A .NET typesafe implementation of Domainr's API
 
-**DomainrUtil** is a utility class that provides an easy way to interact with the [Domainr](https://domainr.com/) API. It helps check domain name availability, fetch domain status, and get registration details.  
-
-## Features  
-
-- **Search** for available domain names.  
-- **Check status** of domain names.  
-- **Retrieve registration** information for domains.  
+Provides typed Domainr search, status, and registrar-redirect operations through RapidAPI.
 
 ## Installation
 
-```
+```bash
 dotnet add package Soenneker.Domainr.Util
 ```
 
-Register via DI:
+## Configuration
+
+```json
+{
+  "Domainr": {
+    "Host": "domainr.p.rapidapi.com",
+    "ApiKey": "your-rapidapi-key"
+  }
+}
+```
+
+Keep the API key in a secret provider. `Host` is trusted configuration because it determines the destination that receives the key.
+
+## Registration
+
 ```csharp
+using Soenneker.Domainr.Util.Registrars;
+
 services.AddDomainrUtilAsScoped();
 ```
 
-## Usage  
+The scoped registration creates a util per dependency-injection scope while retaining the underlying Domainr HTTP client provider as a singleton. Use `AddDomainrUtilAsSingleton()` when the typed util should also live for the application lifetime.
 
-### Searching for a Domain 
+## Search
 
 ```csharp
-var searchRequest = new DomainrSearchRequest { Query = "example" };
-var result = await _domainrUtil.Search(searchRequest);
+using Soenneker.Domainr.Util.Abstract;
+using Soenneker.Domainr.Util.Requests;
+using Soenneker.Domainr.Util.Responses;
 
-if (result?.Results != null)
-{
-    foreach (var domain in result.Results)
+DomainrSearchResponse? response = await domainr.Search(
+    new DomainrSearchRequest
     {
-        Console.WriteLine($"Domain: {domain.Domain}, Register: {domain.RegisterUrl}");
-    }
+        Query = "example",
+        Location = "us",
+        Defaults = "com,net"
+    },
+    cancellationToken);
+
+foreach (DomainrSearchResult result in response?.Results ?? [])
+{
+    Console.WriteLine($"{result.Domain}: {result.RegisterUrl}");
 }
 ```
 
-#### ?? Search Response Structure  
+Optional `Registrar` and `Keywords` values can further constrain or seed a search. Request values are URL-encoded and null optional values are omitted.
 
-| Property     | Type    | Description |
-|-------------|--------|-------------|
-| `Domain`    | `string?` | The full domain name found in search results. |
-| `Host`      | `string?` | The host part of the domain. |
-| `Subdomain` | `string?` | The subdomain part of the domain. |
-| `Zone`      | `string?` | The top-level domain (TLD) of the domain name. |
-| `Path`      | `string?` | Any associated path with the domain (if applicable). |
-| `RegisterUrl` | `string?` | A direct URL to register the domain. |
-
-### 3. Checking Domain Status  
-
-The `Status` method fetches real-time information about a domain’s availability.  
+## Check status
 
 ```csharp
-var statusRequest = new DomainrStatusRequest { Domain = "example.com" };
-var statusResponse = await _domainrUtil.Status(statusRequest);
+DomainrStatusResponse? response = await domainr.Status(
+    new DomainrStatusRequest {Domain = "example.com"},
+    cancellationToken);
 
-if (statusResponse?.Status != null)
+foreach (DomainrStatusResult result in response?.Status ?? [])
 {
-    foreach (var status in statusResponse.Status)
-    {
-        Console.WriteLine($"Domain: {status.Domain}, Status: {status.Status}");
-    }
+    Console.WriteLine($"{result.Domain}: {result.Status}");
 }
 ```
 
-#### ?? Status Response Structure  
+`Status` is Domainrâ€™s space-delimited status string. Interpret all returned tokens rather than testing one exact value.
 
-| Property  | Type    | Description |
-|-----------|--------|-------------|
-| `Status`  | `List<DomainrStatusResult>?` | A list of domain status results. |
+## Get a registrar redirect
 
-Each `DomainrStatusResult` contains information about the queried domain’s availability and status.
+```csharp
+DomainrRegisterResponse? response = await domainr.Register(
+    new RegisterRequest
+    {
+        Domain = "example.com",
+        Registrar = "dnsimple.com"
+    },
+    cancellationToken);
 
-#### ?? Status Result Structure  
+string? redirectUrl = response?.RedirectUrl;
+```
 
-| Property  | Type    | Description |
-|-----------|--------|-------------|
-| `Domain`  | `string?` | The full domain name being checked. |
-| `Zone`    | `string?` | The top-level domain (TLD) of the domain. |
-| `Status`  | `string?` | A space-delimited list of status types (e.g., `available taken blocked`). |
-| `Summary` | `string?` | *(Deprecated)* |
+`Register` obtains a redirect URL; it does not purchase or register the domain.
+
+All operations require a successful HTTP status and then deserialize JSON. Non-success responses throw `HttpRequestException`; invalid or empty JSON can throw `JsonException`. The util does not retry rate limits or transient failures, so apply retries at the application boundary when appropriate and always pass cancellation tokens.

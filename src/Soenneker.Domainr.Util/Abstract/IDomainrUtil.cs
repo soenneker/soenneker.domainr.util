@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Soenneker.Domainr.Util.Abstract;
 
 /// <summary>
-/// A .NET typesafe implementation of Domainr's API
+/// Provides typed access to Domainr search, status, and registrar redirect operations.
 /// </summary>
 public interface IDomainrUtil
 {
@@ -15,7 +15,7 @@ public interface IDomainrUtil
     /// </summary>
     /// <param name="request">The search request parameters.</param>
     /// <param name="cancellationToken">Optional cancellation token.</param>
-    /// <returns>A Task representing the asynchronous operation, returning a SearchResponse object.</returns>
+    /// <returns>The deserialized search response.</returns>
     ValueTask<DomainrSearchResponse?> Search(DomainrSearchRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -23,14 +23,14 @@ public interface IDomainrUtil
     /// </summary>
     /// <param name="request">The status request parameters.</param>
     /// <param name="cancellationToken">Optional cancellation token.</param>
-    /// <returns>A Task representing the asynchronous operation, returning a StatusResponse object.</returns>
+    /// <returns>The deserialized status response.</returns>
     ValueTask<DomainrStatusResponse?> Status(DomainrStatusRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Registers a domain and redirects to a supporting registrar.
+    /// Gets a supporting registrar redirect for a domain.
     /// </summary>
     /// <param name="request">The register request parameters.</param>
     /// <param name="cancellationToken">Optional cancellation token.</param>
-    /// <returns>A Task representing the asynchronous operation, returning a RegisterResponse object.</returns>
+    /// <returns>The deserialized registrar redirect response.</returns>
     ValueTask<DomainrRegisterResponse?> Register(RegisterRequest request, CancellationToken cancellationToken = default);
 }

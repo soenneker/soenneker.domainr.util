@@ -6,7 +6,7 @@ using Soenneker.Domainr.Util.Abstract;
 namespace Soenneker.Domainr.Util.Registrars;
 
 /// <summary>
-/// A .NET typesafe implementation of Domainr's API
+/// Registers typed Domainr API access.
 /// </summary>
 public static class DomainrUtilRegistrar
 {
@@ -29,7 +29,7 @@ public static class DomainrUtilRegistrar
     /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddDomainrUtilAsScoped(this IServiceCollection services)
     {
-        services.AddDomainrClientUtilAsScoped().TryAddScoped<IDomainrUtil, DomainrUtil>();
+        services.AddDomainrClientUtilAsSingleton().TryAddScoped<IDomainrUtil, DomainrUtil>();
 
         return services;
     }
