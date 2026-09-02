@@ -32,17 +32,17 @@ public class DomainrUtilTests : HostedUnitTest
     [Test]
     [Skip("Manual")]
     //[LocalOnly]
-    public async ValueTask Search_should_search()
+    public async ValueTask Search_should_search(CancellationToken cancellationToken)
     {
         var request = new DomainrStatusRequest { Domain = "blah.com" };
 
-        DomainrStatusResponse? result = await _util.Status(request, System.Threading.CancellationToken.None);
+        DomainrStatusResponse? result = await _util.Status(request, cancellationToken);
         result.Should()
               .NotBeNull();
     }
 
     [Test]
-    public async Task Search_should_encode_query_and_deserialize_success()
+    public async Task Search_should_encode_query_and_deserialize_success(CancellationToken cancellationToken)
     {
         Uri? requestedUri = null;
         using var client = new HttpClient(new StubHandler(request =>
@@ -58,14 +58,14 @@ public class DomainrUtilTests : HostedUnitTest
         };
 
         var util = new DomainrUtil(new StubClientUtil(client));
-        DomainrSearchResponse? result = await util.Search(new DomainrSearchRequest {Query = "example & test"});
+        DomainrSearchResponse? result = await util.Search(new DomainrSearchRequest {Query = "example & test"}, cancellationToken: cancellationToken);
 
         requestedUri.Should().Be(new Uri("https://example.test/v2/search?query=example%20%26%20test"));
         result!.Results![0].Domain.Should().Be("example.com");
     }
 
     [Test]
-    public async Task Status_should_throw_for_non_success_response()
+    public async Task Status_should_throw_for_non_success_response(CancellationToken cancellationToken)
     {
         using var client = new HttpClient(new StubHandler(_ => new HttpResponseMessage(HttpStatusCode.TooManyRequests)))
         {
@@ -73,7 +73,7 @@ public class DomainrUtilTests : HostedUnitTest
         };
 
         var util = new DomainrUtil(new StubClientUtil(client));
-        Func<Task> act = async () => await util.Status(new DomainrStatusRequest {Domain = "example.com"});
+        Func<Task> act = async () => await util.Status(new DomainrStatusRequest {Domain = "example.com"}, cancellationToken: cancellationToken);
 
         await act.Should().ThrowAsync<HttpRequestException>();
     }
