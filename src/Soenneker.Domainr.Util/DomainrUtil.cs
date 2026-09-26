@@ -1,4 +1,5 @@
-﻿using Soenneker.Domainr.Client.Abstract;
+using System.Text.Json.Serialization.Metadata;
+using Soenneker.Domainr.Client.Abstract;
 using Soenneker.Domainr.Util.Abstract;
 using Soenneker.Domainr.Util.Responses;
 using System.Net.Http;
@@ -27,7 +28,7 @@ public sealed class DomainrUtil : IDomainrUtil
 
         HttpClient client = await _clientUtil.Get(cancellationToken).NoSync();
 
-        return await Send<DomainrSearchResponse>(client, endpoint, cancellationToken).NoSync();
+        return await Send(client, endpoint, DomainrJsonContext.Default.DomainrSearchResponse, cancellationToken).NoSync();
     }
 
     public async ValueTask<DomainrStatusResponse?> Status(DomainrStatusRequest request, CancellationToken cancellationToken = default)
@@ -36,7 +37,7 @@ public sealed class DomainrUtil : IDomainrUtil
 
         HttpClient client = await _clientUtil.Get(cancellationToken).NoSync();
 
-        return await Send<DomainrStatusResponse>(client, endpoint, cancellationToken).NoSync();
+        return await Send(client, endpoint, DomainrJsonContext.Default.DomainrStatusResponse, cancellationToken).NoSync();
     }
 
     public async ValueTask<DomainrRegisterResponse?> Register(RegisterRequest request, CancellationToken cancellationToken = default)
@@ -45,14 +46,14 @@ public sealed class DomainrUtil : IDomainrUtil
 
         HttpClient client = await _clientUtil.Get(cancellationToken).NoSync();
 
-        return await Send<DomainrRegisterResponse>(client, endpoint, cancellationToken).NoSync();
+        return await Send(client, endpoint, DomainrJsonContext.Default.DomainrRegisterResponse, cancellationToken).NoSync();
     }
 
-    private static async ValueTask<T?> Send<T>(HttpClient client, string endpoint, CancellationToken cancellationToken)
+    private static async ValueTask<T?> Send<T>(HttpClient client, string endpoint, JsonTypeInfo<T> typeInfo, CancellationToken cancellationToken)
     {
         using HttpResponseMessage response = await client.GetAsync(endpoint, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        return await response.Content.ReadFromJsonAsync(typeInfo, cancellationToken).ConfigureAwait(false);
     }
 }
