@@ -24,7 +24,7 @@ public sealed class DomainrUtil : IDomainrUtil
 
     public async ValueTask<DomainrSearchResponse?> Search(DomainrSearchRequest request, CancellationToken cancellationToken = default)
     {
-        var endpoint = $"search{request.ToQueryString()}";
+        var endpoint = $"search{request.ToQueryString(DomainrJsonContext.Default.DomainrSearchRequest)}";
 
         HttpClient client = await _clientUtil.Get(cancellationToken).NoSync();
 
@@ -33,7 +33,7 @@ public sealed class DomainrUtil : IDomainrUtil
 
     public async ValueTask<DomainrStatusResponse?> Status(DomainrStatusRequest request, CancellationToken cancellationToken = default)
     {
-        var endpoint = $"status{request.ToQueryString()}";
+        var endpoint = $"status{request.ToQueryString(DomainrJsonContext.Default.DomainrStatusRequest)}";
 
         HttpClient client = await _clientUtil.Get(cancellationToken).NoSync();
 
@@ -42,7 +42,7 @@ public sealed class DomainrUtil : IDomainrUtil
 
     public async ValueTask<DomainrRegisterResponse?> Register(RegisterRequest request, CancellationToken cancellationToken = default)
     {
-        var endpoint = $"register{request.ToQueryString()}";
+        var endpoint = $"register{request.ToQueryString(DomainrJsonContext.Default.RegisterRequest)}";
 
         HttpClient client = await _clientUtil.Get(cancellationToken).NoSync();
 
