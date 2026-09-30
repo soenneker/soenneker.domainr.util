@@ -42,7 +42,7 @@ public class DomainrUtilTests : HostedUnitTest
     }
 
     [Test]
-    public async Task Search_should_encode_query_and_deserialize_success(CancellationToken cancellationToken)
+    public async ValueTask Search_should_encode_query_and_deserialize_success(CancellationToken cancellationToken)
     {
         Uri? requestedUri = null;
         using var client = new HttpClient(new StubHandler(request =>
@@ -65,7 +65,7 @@ public class DomainrUtilTests : HostedUnitTest
     }
 
     [Test]
-    public async Task Status_should_throw_for_non_success_response(CancellationToken cancellationToken)
+    public async ValueTask Status_should_throw_for_non_success_response(CancellationToken cancellationToken)
     {
         using var client = new HttpClient(new StubHandler(_ => new HttpResponseMessage(HttpStatusCode.TooManyRequests)))
         {
